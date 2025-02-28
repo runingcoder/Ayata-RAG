@@ -1,8 +1,6 @@
 pip install fastapi uvicorn
-pip install langchain
-pip install langchain-community
-pip install chromadb
-
+pip uninstall chromadb
+pip install langchain langchain-chroma langchain-ollama
 //changes in code.
 embeddings = OllamaEmbeddings(model="nomic-embed-text")
 llm = Ollama(model="zephyr:7b")
