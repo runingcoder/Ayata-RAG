@@ -1,0 +1,31 @@
+Make sure you have ollama model running.
+
+## FOr linux:
+
+Download the ollama deb file,
+sudo dpkg -i <path_to_downloaded_file>.deb
+
+ollama list
+
+ollama pull zephyr:latest
+
+## For mac:
+
+brew install ollama
+ollama list
+
+ollama pull zephyr:latest
+ollama run zephyr:latest ( to check the model chat interface)
+
+--------
+Make environment:
+python3 -m venv env
+
+pip install -r requirements.txt
+
+activate environment, 
+
+python3 simple/direct.pypdf
+
+
+--------------
