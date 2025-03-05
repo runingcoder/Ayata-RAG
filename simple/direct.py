@@ -15,10 +15,12 @@ from langchain.docstore.document import Document
 # Constants
 CHROMA_PATH = "chroma"
 DATA_PATH = "new\examples_data"
-# COMPANY_FILE = "nke-10k-2023.pdf"
-COMPANY_FILE = 'Ayata pdf.pdf'
-# FILE_PATH = 'new\examples_data\nke-10k-2023.pdf'
-FILE_PATH = 'new\examples_data\Ayata pdf.pdf'
+COMPANY_FILE = "nke-10k-2023.pdf"
+# COMPANY_FILE = 'Ayata pdf.pdf'
+# COMPANY_FILE = 'django.pdf'
+FILE_PATH = 'new\examples_data\nke-10k-2023.pdf'
+# FILE_PATH = 'new\examples_data\Ayata pdf.pdf'
+# FILE_PATH = 'new\examples_data\django.pdf'
 
 # Global instances
 llm = ChatOllama(model="zephyr:latest")
@@ -32,6 +34,13 @@ def main():
 
 def initialize_rag():
     global vector_store
+    print('Checking for existing embeddings...')
+    
+    vector_store = check_existing_embeddings()
+    if vector_store is not None:
+        print(f"Embeddings for {COMPANY_FILE} already exist. Skipping document processing.")
+        return
+    print('Loadin the document! Keep patience please')
     document = load_document()
     print('doc loaded')
     all_splits = split_documents(document)
@@ -43,6 +52,24 @@ def initialize_rag():
     embed_document(all_splits)
     print('doc embedded')
     print(f"Initialized RAG with {COMPANY_FILE}.")
+
+def check_existing_embeddings():
+    """Check if embeddings already exist for the given file in ChromaDB."""
+    try:
+        vector_store = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_model)
+
+        results = vector_store._collection.get(
+            where={"source": FILE_PATH},  
+            limit=1
+        )
+
+        if len(results["ids"]) > 0:
+            return vector_store
+
+    except Exception as e:
+        print(f"Error checking existing embeddings: {e}")
+
+    return None 
 
 def load_document() -> Document:
     file_path = os.path.join(DATA_PATH, COMPANY_FILE)
@@ -72,7 +99,7 @@ def split_documents(documents):
 def embed_document(documents):
     global vector_store
     vector_store = Chroma.from_documents(
-        documents, embedding_model, persist_directory=CHROMA_PATH, collection_metadata={"hnsw:space": "cosine"}
+        documents, embedding_model, persist_directory=CHROMA_PATH, collection_metadata={"hnsw:space": "cosine", "filename": COMPANY_FILE}
     )
     print(f"Saved document to {CHROMA_PATH}.")
 
@@ -83,16 +110,12 @@ def query_rag(question: str, relevance_threshold: float = 0.5):
         print(f"Response (LLM only): {response}\n")
         return
 
-    # Debug: Print raw scores
-    docs_with_scores = vector_store.similarity_search_with_relevance_scores(question, k=2)
+    docs_with_scores = vector_store.similarity_search_with_relevance_scores(question, k=3)
     
-    # print("Debug: Raw docs_with_scores:", docs_with_scores)
     
     if docs_with_scores:
         # takes the doc with the highest score for now. Will do rag chaining later for summary of summary docs.
         doc, score = max(docs_with_scores, key=lambda x: x[1])
-
-        # print(f"Debug: Top document: {doc}")
         print(f"Debug: Relevance score: {score}")
 
         if score >= relevance_threshold:
