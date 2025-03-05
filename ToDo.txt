@@ -1,0 +1,8 @@
+0) Optimize for loading and embedding data to reduce initial load time. ( caching or storing record in a file to check if it's already cached or not)
+1) Can we use alternative model( apart for gemma or zephyr) that has lower RAM and space requirements, possible to do the required task of a chatbot based on a domain company content information (pdf)?
+
+2) What would be the cost of deploying the final optimized version of that locally run LLM-RAG system, and how would it compare against simply using OPENAI apikey based LLM.
+3) After selection of models, execution , testing and comparision, integrate this into a fastapi server and make a mock JS frontend to give the chat experience.
+
+
+
