@@ -1,0 +1,28 @@
+import os
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.docstore.document import Document
+
+# Initialize the embedding model
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+# Sample documents
+documents = [
+    Document(page_content="Twitter is a social media company known for microblogging.", metadata={"source": "doc1"}),
+    Document(page_content="Facebook is another popular social media platform.", metadata={"source": "doc2"}),
+    Document(page_content="Tesla is an electric car manufacturer.", metadata={"source": "doc3"}),
+]
+
+# Create ChromaDB vector store
+vector_store = Chroma.from_documents(documents, embedding_model, persist_directory="chroma_test")
+
+# Test query
+query = "Twitter"
+
+# Perform similarity search
+results = vector_store.similarity_search_with_relevance_scores(query, k=3)
+
+# Display results
+for doc, score in results:
+    print(f"Relevance Score: {score:.4f}")
+    print(f"Content: {doc.page_content}\n")
