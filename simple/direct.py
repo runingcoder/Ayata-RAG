@@ -14,16 +14,17 @@ from langchain.docstore.document import Document
 
 # Constants
 CHROMA_PATH = "chroma"
-DATA_PATH = "new\examples_data"
-COMPANY_FILE = "nke-10k-2023.pdf"
-# COMPANY_FILE = 'Ayata pdf.pdf'
+DATA_PATH = "simple/new/examples_data"
+# COMPANY_FILE = "nke-10k-2023.pdf"
+COMPANY_FILE = 'Ayata pdf.pdf'
 # COMPANY_FILE = 'django.pdf'
-FILE_PATH = 'new\examples_data\nke-10k-2023.pdf'
+# FILE_PATH = 'new\examples_data\nke-10k-2023.pdf'
 # FILE_PATH = 'new\examples_data\Ayata pdf.pdf'
+FILE_PATH = 'simple/new/examples_data/Ayata pdf.pdf'
 # FILE_PATH = 'new\examples_data\django.pdf'
 
 # Global instances
-llm = ChatOllama(model="zephyr:latest")
+llm = ChatOllama(model="qwen2.5:1.5b")
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 vector_store = None

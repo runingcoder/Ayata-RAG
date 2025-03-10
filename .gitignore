@@ -1,2 +1,4 @@
 env/
 chroma/
+db/
+__pycache__/
