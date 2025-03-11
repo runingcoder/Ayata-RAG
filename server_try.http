@@ -1,0 +1,39 @@
+### Embed a PDF into a Chroma collection
+POST http://192.168.254.32:8000/embed
+Content-Type: application/json
+
+# {
+#   "file_path": "simple/new/examples_data/django.pdf",
+#   "collection_name": "Django_doc"
+# }
+
+{
+  "file_path": "simple/new/examples_data/Ayata.pdf",
+  "collection_name": "Ayata_doc"
+
+}
+
+
+### Query a Chroma collection for similar documents
+POST http://192.168.254.32:8000/query
+Content-Type: application/json
+
+{
+  "query": "What is Ayata incorporation?",
+  "collection_name": "Ayata_doc",
+  "k": 3
+}
+
+### Query for getting the final response
+
+POST http://192.168.254.32:8000/main_query
+Content-Type: application/json
+
+{
+  "query": "What are the different projects Ayata has done?Give in list."
+}
+
+### Delete all collections in Chroma DB
+DELETE http://192.168.254.32:8000/delete-all-collections
+Content-Type: application/json
+
